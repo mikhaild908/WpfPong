@@ -1,0 +1,82 @@
+﻿<Window x:Class="WpfPong.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfPong"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+        xmlns:converter="clr-namespace:WpfPong.Converter"
+        mc:Ignorable="d"
+        Title="Pong" Height="450" Width="650" WindowStartupLocation="CenterScreen"
+        DataContext="{Binding Main, Source={StaticResource Locator}}">
+    
+    <Window.Resources>
+        <converter:LoadedCommandEventArgsConverter x:Key="LoadedCommandEventArgsConverter"/>
+    </Window.Resources>
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <cmd:EventToCommand Command="{Binding Mode=OneWay, Path=LoadedCommand}"
+                                EventArgsConverter="{StaticResource LoadedCommandEventArgsConverter}"
+                                EventArgsConverterParameter="{Binding ElementName=canvas}"
+                                PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="KeyDown">
+            <cmd:EventToCommand Command="{Binding Path=KeyDownCommand}"
+                                PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Canvas x:Name="canvas"
+            Background="Black"
+            Height="{Binding CanvasHeight, Mode=OneWay}"
+            Width="{Binding CanvasWidth, Mode=OneWay}"
+            Focusable="True">
+        <Rectangle x:Name="paddle1"
+                   Height="{Binding Paddle1Height, Mode=OneWay}"
+                   Width="{Binding Paddle1Width, Mode=OneWay}"
+                   Fill="Green"
+                   Stroke="Green"
+                   RadiusX="5"
+                   RadiusY="5"
+                   Canvas.Left="{Binding Paddle1Left}"
+                   Canvas.Top="{Binding Paddle1Top}" />
+        <Rectangle x:Name="paddle2"
+                   Height="{Binding Paddle2Height, Mode=OneWay}"
+                   Width="{Binding Paddle2Width, Mode=OneWay}"
+                   Fill="Green"
+                   Stroke="Green"
+                   RadiusX="5"
+                   RadiusY="5"
+                   Canvas.Left="{Binding Paddle2Left}"
+                   Canvas.Top="{Binding Paddle2Top}" />
+        <Line x:Name="line"
+              Height="400"
+              X1="300"
+              X2="300"
+              Y1="0"
+              Y2="600"
+              Stroke="Green"
+              StrokeThickness="2" />
+        <Ellipse x:Name="ball"
+                 Fill="Green"
+                 Stroke="Green"
+                 Height="{Binding BallHeight, Mode=OneWay}"
+                 Width="{Binding BallWidth, Mode=OneWay}"
+                 Canvas.Top="{Binding BallTop}"
+                 Canvas.Left="{Binding BallLeft}" />
+        <TextBlock x:Name="player1Score"
+                   Foreground="Green"
+                   Text="{Binding Player1Score, UpdateSourceTrigger=PropertyChanged}"
+                   Canvas.Top="20"
+                   Canvas.Left="100"
+                   FontSize="20"/>
+        <TextBlock x:Name="player2Score"
+                   Foreground="Green"
+                   Text="{Binding Player2Score, UpdateSourceTrigger=PropertyChanged}"
+                   Canvas.Top="20"
+                   Canvas.Left="400"
+                   FontSize="20"/>
+    </Canvas>
+</Window>
